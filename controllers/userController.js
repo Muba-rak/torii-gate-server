@@ -140,4 +140,53 @@ const handleLogin = async (req, res) => {
   }
 };
 
-module.exports = { handleRegister, handleVerifyEmail, handleLogin };
+const resendVerificationEmail = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  try {
+    const user = await USER.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({ message: "Email is already verified" });
+    }
+
+    // generate a new token and expiration
+    const newToken = generateToken();
+    const tokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hrs
+
+    user.verificationToken = newToken;
+    user.verificationTokenExpires = tokenExpires;
+    await user.save();
+
+    const clientUrl = `${process.env.FRONTEND_URL}/verify-email/${newToken}`;
+
+    await sendWelcomeEmail({
+      email: user.email,
+      fullName: user.fullName,
+      clientUrl,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Verification email sent",
+    });
+  } catch (error) {
+    console.error("Error resending verification email:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  handleRegister,
+  handleVerifyEmail,
+  handleLogin,
+  resendVerificationEmail,
+};
