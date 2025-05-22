@@ -141,7 +141,7 @@ const createResetTemplate = (fullName, clientUrl) => {
       >
         <h1>You have requested for a password reset from Torii Gate</h1>
         <p>Please go to this link to reset password</p>
-        <a href="${clientUrl}" clicktracking="off">Click To Reset</a>
+        <a href="${clientUrl}" clicktracking="off" target="_blank">Click To Reset</a>
       </div>
 
       <p>
