@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const generateToken = require("../helpers/generateToken");
 const { sendWelcomeEmail, sendResetEmail } = require("../email/sendEmail");
 const jwt = require("jsonwebtoken");
-const cloudinary = rrequire("cloudinary").v2;
+const cloudinary = require("cloudinary").v2;
 
 const handleRegister = async (req, res) => {
   const { fullName, email, password, phoneNumber, role } = req.body;
