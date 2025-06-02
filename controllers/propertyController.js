@@ -96,6 +96,7 @@ const getAllProperties = async (req, res) => {
       totalPages,
       currentPage: parseInt(page),
       properties,
+      totalProperties,
     });
   } catch (error) {
     console.error(error);
